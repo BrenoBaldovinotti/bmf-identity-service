@@ -6,20 +6,12 @@ namespace IdentityServer.API.Controllers;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/auth")]
-public class AuthController(IAuthService _authService) : BaseController
+public class AuthController(IAuthService authService) : BaseController
 {
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterUserDto registerDto)
-    {
-        var success = await _authService.RegisterAsync(registerDto);
-        if (!success) return Error("Registration failed.");
-        return Success("User registered successfully.");
-    }
-
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto loginDto)
     {
-        var token = await _authService.LoginAsync(loginDto);
+        var token = await authService.LoginAsync(loginDto);
         if (token == null) return Unauthorized("Invalid credentials.");
         return Success(new { Token = token });
     }

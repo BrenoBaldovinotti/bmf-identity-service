@@ -4,5 +4,5 @@ namespace IdentityServer.Application.Services.User;
 
 public interface IUserService
 {
-    Task<string> LoginAsync(LoginRequestDto request);
+    Task<bool> RegisterAsync(RegisterUserDto registerDto);
 }

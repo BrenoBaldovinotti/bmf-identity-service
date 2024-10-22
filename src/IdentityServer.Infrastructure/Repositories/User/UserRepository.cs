@@ -14,7 +14,7 @@ public class UserRepository(IdentityDbContext context) : IUserRepository
     public async Task<bool> IsApplicationKeyValidAsync(string applicationKey)
     {
         return await context.Tenants.AnyAsync(a => a.Key == applicationKey);
-    }
+    }   
 
     public async Task AddUserAsync(Domain.Entities.User user)
     {
