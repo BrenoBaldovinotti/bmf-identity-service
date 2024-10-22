@@ -1,5 +1,5 @@
 ﻿using IdentityServer.Application.DTOs;
-using IdentityServer.Infrastructure.Repositories;
+using IdentityServer.Infrastructure.Repositories.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

@@ -1,87 +1,37 @@
-using IdentityServer.Infrastructure;
-using IdentityServer.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 using Serilog;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using IdentityServer.Application.DTOs;
-using IdentityServer.Application.Validators;
-using IdentityServer.Infrastructure.Data.Migrations;
-using IdentityServer.API.Middlewares;
-using IdentityServer.API.Filters;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace IdentityServer.API;
 
-// Configure Serilog
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateBootstrapLogger();
-
-builder.Host.UseSerilog((context, services, configuration) =>
-    configuration.ReadFrom.Configuration(context.Configuration));
-
-// Add DbContext and configure Identity with GUIDs as primary keys
-builder.Services.AddInfrastructureContexts(builder.Configuration);
-builder.Services.AddInfrastructureServices();
-
-// Configure Identity
-builder.Services.AddIdentity<User, IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<IdentityDbContext>()
-    .AddDefaultTokenProviders();
-
-// Add JWT Authentication
-var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Secret"]);
-
-builder.Services.AddAuthentication(options =>
+public class Program
 {
-    options.DefaultAuthenticateScheme = "JwtBearer";
-    options.DefaultChallengeScheme = "JwtBearer";
-})
-.AddJwtBearer("JwtBearer", options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
+    public static void Main(string[] args)
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(secretKey)
-    };
-});
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .WriteTo.Console()
+            .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
 
-// Add custom validators
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
-builder.Services.AddScoped<IValidator<LoginRequestDto>, LoginRequestDtoValidator>();
+        try
+        {
+            Log.Information("Starting up the application...");
+            CreateHostBuilder(args).Build().Run();
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "The application failed to start.");
+        }
+        finally
+        {
+            Log.CloseAndFlush();
+        }
+    }
 
-// Add Controllers and Swagger
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<ValidationFilter>(); 
-});
-
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .UseSerilog()
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
 }
-
-// Use Global Exception Handler Middleware
-app.UseMiddleware<GlobalExceptionMiddleware>();
-
-app.UseSerilogRequestLogging();
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
-app.MapControllers();
-
-app.Run();

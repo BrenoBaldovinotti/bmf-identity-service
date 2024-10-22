@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using IdentityServer.Domain.Entities;
 
-namespace IdentityServer.Infrastructure.Data.Migrations;
+namespace IdentityServer.Infrastructure.Data;
 
 public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
 {
