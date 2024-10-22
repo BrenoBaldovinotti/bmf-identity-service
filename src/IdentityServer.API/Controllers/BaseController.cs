@@ -40,4 +40,15 @@ public abstract class BaseController() : ControllerBase
             StatusCode = StatusCodes.Status400BadRequest
         });
     }
+
+    protected IActionResult ValidationError(Dictionary<string, string[]> errors)
+    {
+        return BadRequest(new ApiResponseModel<object>
+        {
+            Status = "error",
+            Message = "Validation failed.",
+            Errors = errors,
+            StatusCode = StatusCodes.Status400BadRequest
+        });
+    }
 }

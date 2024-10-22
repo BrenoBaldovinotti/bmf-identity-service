@@ -7,6 +7,10 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Diagnostics;
 using IdentityServer.Infrastructure.Middlewares;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using IdentityServer.Application.DTOs;
+using IdentityServer.Application.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +53,10 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(secretKey)
     };
 });
+
+// Add custom validators
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 
 // Add Controllers and Swagger
 builder.Services.AddControllers();
