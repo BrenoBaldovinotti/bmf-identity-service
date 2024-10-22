@@ -57,6 +57,7 @@ builder.Services.AddAuthentication(options =>
 // Add custom validators
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+builder.Services.AddScoped<IValidator<LoginRequestDto>, LoginRequestDtoValidator>();
 
 // Add Controllers and Swagger
 builder.Services.AddControllers(options =>
