@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Identity;
 using Serilog;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Diagnostics;
-using IdentityServer.Infrastructure.Middlewares;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using IdentityServer.Application.DTOs;
 using IdentityServer.Application.Validators;
 using IdentityServer.Infrastructure.Data.Migrations;
+using IdentityServer.API.Middlewares;
+using IdentityServer.API.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,7 +59,11 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 
 // Add Controllers and Swagger
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidationFilter>(); 
+});
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();

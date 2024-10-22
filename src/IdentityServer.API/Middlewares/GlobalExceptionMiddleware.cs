@@ -1,10 +1,8 @@
 ﻿using IdentityServer.Domain.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text.Json;
 
-namespace IdentityServer.Infrastructure.Middlewares;
+namespace IdentityServer.API.Middlewares;
 
 public class GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
 {
