@@ -36,8 +36,7 @@ public class AuthService(UserManager<Domain.Entities.User> userManager, UserRepo
     public async Task<string?> LoginAsync(LoginRequestDto loginDto)
     {
         var user = await userRepository.GetByUsernameAsync(loginDto.Username);
-        if (user == null || !await userManager.CheckPasswordAsync(user, loginDto.Password))
-            return null;
+        if (user == null || !await userManager.CheckPasswordAsync(user, loginDto.Password)) return null;
 
         return GenerateJwtToken(user);
     }
@@ -49,9 +48,9 @@ public class AuthService(UserManager<Domain.Entities.User> userManager, UserRepo
 
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Name, user.UserName),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email)
+            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new(JwtRegisteredClaimNames.Name, user.UserName),
+            new(JwtRegisteredClaimNames.Email, user.Email)
         };
 
         var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);

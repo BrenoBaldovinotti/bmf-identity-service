@@ -2,18 +2,18 @@
 using IdentityServer.Application.Services.Auth;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IdentityServer.Presentation.Controllers;
+namespace IdentityServer.API.Controllers;
 
 [ApiController]
-[Route("api/v1/auth")]
-public class AuthController(IAuthService _authService) : ControllerBase
+[Route("api/v{version:apiVersion}/auth")]
+public class AuthController(IAuthService _authService) : BaseController
 {
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto registerDto)
     {
         var success = await _authService.RegisterAsync(registerDto);
-        if (!success) return BadRequest("Registration failed.");
-        return Ok("User registered successfully.");
+        if (!success) return Error("Registration failed.");
+        return Success("User registered successfully.");
     }
 
     [HttpPost("login")]
@@ -21,6 +21,6 @@ public class AuthController(IAuthService _authService) : ControllerBase
     {
         var token = await _authService.LoginAsync(loginDto);
         if (token == null) return Unauthorized("Invalid credentials.");
-        return Ok(new { Token = token });
+        return Success(new { Token = token });
     }
 }
