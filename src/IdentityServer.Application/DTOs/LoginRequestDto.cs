@@ -1,7 +1,11 @@
-﻿namespace IdentityServer.Application.DTOs;
+﻿using System.Text.Json.Serialization;
+
+namespace IdentityServer.Application.DTOs;
 
 public class LoginRequestDto
 {
+    [JsonPropertyName("username")]
     public string Username { get; set; } = string.Empty;
+    [JsonPropertyName("password")]
     public string Password { get; set; } = string.Empty;
 }
