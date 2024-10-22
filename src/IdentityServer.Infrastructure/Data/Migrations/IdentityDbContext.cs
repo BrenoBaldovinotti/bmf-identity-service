@@ -3,35 +3,35 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using IdentityServer.Domain.Entities;
 
-namespace IdentityServer.Infrastructure.Data;
+namespace IdentityServer.Infrastructure.Data.Migrations;
 
 public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : IdentityDbContext<User, IdentityRole<Guid>, Guid>(options)
 {
-    public DbSet<Application> Applications { get; set; }
-    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+    public DbSet<Tenant> Tenants { get; set; }
+    public DbSet<TenantUser> TenantUsers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
         // Ensure Application Key is unique
-        builder.Entity<Application>()
-            .HasIndex(a => a.Key)
+        builder.Entity<Tenant>()
+            .HasIndex(t => t.Key)
             .IsUnique();
 
-        builder.Entity<ApplicationUser>()
-            .HasKey(au => new { au.UserId, au.ApplicationId });
+        builder.Entity<TenantUser>()
+            .HasKey(au => new { au.UserId, au.TenantId });
 
-        builder.Entity<ApplicationUser>()
+        builder.Entity<TenantUser>()
             .HasOne<User>()
             .WithMany()
-            .HasForeignKey(au => au.UserId)
+            .HasForeignKey(tu => tu.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Entity<ApplicationUser>()
-            .HasOne<Application>()
+        builder.Entity<TenantUser>()
+            .HasOne<Tenant>()
             .WithMany()
-            .HasForeignKey(au => au.ApplicationId)
+            .HasForeignKey(tu => tu.TenantId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

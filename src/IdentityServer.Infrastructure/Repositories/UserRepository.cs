@@ -1,5 +1,5 @@
 ﻿using IdentityServer.Domain.Entities;
-using IdentityServer.Infrastructure.Data;
+using IdentityServer.Infrastructure.Data.Migrations;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdentityServer.Infrastructure.Repositories;
@@ -13,7 +13,7 @@ public class UserRepository(IdentityDbContext context)
 
     public async Task<bool> IsApplicationKeyValidAsync(string applicationKey)
     {
-        return await context.Applications.AnyAsync(a => a.Key == applicationKey);
+        return await context.Tenants.AnyAsync(a => a.Key == applicationKey);
     }
 
     public async Task AddUserAsync(User user)
@@ -24,12 +24,12 @@ public class UserRepository(IdentityDbContext context)
 
     public async Task AddUserToApplicationAsync(Guid userId, Guid applicationId)
     {
-        var applicationUser = new ApplicationUser
+        var applicationUser = new TenantUser
         {
             UserId = userId,
-            ApplicationId = applicationId
+            TenantId = applicationId
         };
-        await context.ApplicationUsers.AddAsync(applicationUser);
+        await context.TenantUsers.AddAsync(applicationUser);
         await context.SaveChangesAsync();
     }
 }

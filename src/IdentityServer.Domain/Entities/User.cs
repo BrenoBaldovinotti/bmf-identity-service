@@ -6,6 +6,8 @@ public class User : IdentityUser<Guid>
 {
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    public User() : base() { }
+
     public User(string name, string email, string? phoneNumber) : base(name)
     {
         NormalizedUserName = name.ToUpper();

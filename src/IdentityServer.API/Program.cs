@@ -1,5 +1,4 @@
 using IdentityServer.Infrastructure;
-using IdentityServer.Infrastructure.Data;
 using IdentityServer.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
@@ -11,6 +10,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using IdentityServer.Application.DTOs;
 using IdentityServer.Application.Validators;
+using IdentityServer.Infrastructure.Data.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 

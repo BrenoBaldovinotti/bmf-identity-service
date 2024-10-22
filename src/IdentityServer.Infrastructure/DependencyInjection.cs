@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using IdentityServer.Infrastructure.Data;
 using IdentityServer.Infrastructure.Repositories;
+using IdentityServer.Infrastructure.Data.Migrations;
 
 namespace IdentityServer.Infrastructure;
 
