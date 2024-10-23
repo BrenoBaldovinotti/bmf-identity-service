@@ -18,6 +18,7 @@ public class Startup(IConfiguration configuration)
         services.AddHealthChecks();
 
         services.AddCustomFluentValidation();
+        services.AddCustomFilters();
 
         services.AddCustomCORS();
         services.AddCustomCaching();
@@ -29,7 +30,6 @@ public class Startup(IConfiguration configuration)
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseMiddleware<GlobalExceptionMiddleware>();
-        app.UseMiddleware<ApiKeyMiddleware>();
 
         if (env.IsDevelopment())
         {

@@ -126,11 +126,20 @@ public static class ServiceExtension
         return services;
     }
 
+    public static IServiceCollection AddCustomFilters(this IServiceCollection services)
+    {
+        services.AddScoped<ValidationFilter>();
+        services.AddScoped<TenantResolutionFilter>();
+
+        return services;
+    }
+
     public static IServiceCollection AddCustomControllers(this IServiceCollection services)
     {
         services.AddControllers(options =>
         {
             options.Filters.Add<ValidationFilter>();
+            options.Filters.Add<TenantResolutionFilter>();
         });
 
         return services;
