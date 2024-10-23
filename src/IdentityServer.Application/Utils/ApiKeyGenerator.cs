@@ -7,8 +7,15 @@ public static class ApiKeyGenerator
 {
     public static string GenerateApiKey()
     {
-        var keyBytes = RandomNumberGenerator.GetBytes(32);
-        return Convert.ToBase64String(keyBytes);
+        var uuid = Guid.NewGuid().ToString();
+        var salt = GenerateSalt(16);
+        return $"{uuid}:{salt}";
+    }
+
+    private static string GenerateSalt(int length)
+    {
+        var saltBytes = RandomNumberGenerator.GetBytes(length);
+        return Convert.ToBase64String(saltBytes);
     }
 
     public static string HashApiKey(string apiKey)
