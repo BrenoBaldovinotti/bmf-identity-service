@@ -1,4 +1,5 @@
 ﻿using IdentityServer.Application.Utils;
+using IdentityServer.Domain.Entities;
 using IdentityServer.Domain.Repository;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -8,31 +9,52 @@ public class TenantResolutionFilter(ITenantRepository tenantRepository) : IAsync
 {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        if (!context.HttpContext.Request.Headers.TryGetValue("X-Api-Key", out var extractedApiKey))
+        if (!TryExtractApiKey(context, out var apiKey))
         {
-            context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.HttpContext.Response.WriteAsync("API Key is missing.");
+            await RespondUnauthorized(context, "API Key is missing.");
             return;
         }
 
-        if (string.IsNullOrEmpty(extractedApiKey))
+        if (string.IsNullOrEmpty(apiKey))
         {
-            context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.HttpContext.Response.WriteAsync("Invalid API Key.");
+            await RespondUnauthorized(context, "Invalid API Key.");
             return;
         }
 
-        var hashedApiKey = ApiKeyGenerator.HashApiKey(extractedApiKey);
-        var tenant = await tenantRepository.GetByApiKeyHash(hashedApiKey);
-
+        var tenant = await GetTenantByApiKey(apiKey!);
         if (tenant == null)
         {
-            context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.HttpContext.Response.WriteAsync("Invalid API Key.");
+            await RespondUnauthorized(context, "Invalid API Key.");
             return;
         }
 
         context.HttpContext.Items["Tenant"] = tenant;
         await next();
+    }
+
+    private static bool TryExtractApiKey(ActionExecutingContext context, out string apiKey)
+    {
+        if (context.HttpContext.Request.Headers.TryGetValue("X-Api-Key", out var extractedApiKey))
+        {
+            apiKey = extractedApiKey.ToString();
+            return true;
+        }
+        else
+        {
+            apiKey = string.Empty;
+            return false;
+        }
+    }
+
+    private async Task<Tenant?> GetTenantByApiKey(string apiKey)
+    {
+        var hashedApiKey = ApiKeyGenerator.HashApiKey(apiKey);
+        return await tenantRepository.GetByApiKeyHash(hashedApiKey);
+    }
+
+    private static async Task RespondUnauthorized(ActionExecutingContext context, string message)
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        await context.HttpContext.Response.WriteAsync(message);
     }
 }
