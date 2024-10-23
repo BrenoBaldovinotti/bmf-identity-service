@@ -1,8 +1,9 @@
 ﻿using IdentityServer.Application.DTOs;
 using IdentityServer.Application.Utils;
-using IdentityServer.Infrastructure.Repositories.Tenant;
+using IdentityServer.Domain.Entities;
+using IdentityServer.Domain.Repository;
 
-namespace IdentityServer.Application.Services.Tenant;
+namespace IdentityServer.Application.Services;
 
 public class TenantService(ITenantRepository tenantRepository) : ITenantService
 {
@@ -11,7 +12,7 @@ public class TenantService(ITenantRepository tenantRepository) : ITenantService
         var apiKey = ApiKeyGenerator.GenerateApiKey();
         var hashedApiKey = ApiKeyGenerator.HashApiKey(apiKey);
 
-        var tenant = new Domain.Entities.Tenant
+        var tenant = new Tenant
         {
             Name = createTenantDto.Name,
             ApiKeyHash = hashedApiKey,

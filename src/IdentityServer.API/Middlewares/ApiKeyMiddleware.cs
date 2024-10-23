@@ -1,6 +1,6 @@
 ﻿using IdentityServer.Application.Utils;
+using IdentityServer.Domain.Repository;
 using IdentityServer.Infrastructure.Data;
-using IdentityServer.Infrastructure.Repositories.Tenant;
 
 namespace IdentityServer.API.Middlewares;
 

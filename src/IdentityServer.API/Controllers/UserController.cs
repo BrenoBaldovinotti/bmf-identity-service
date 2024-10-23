@@ -1,5 +1,5 @@
 ﻿using IdentityServer.Application.DTOs;
-using IdentityServer.Application.Services.User;
+using IdentityServer.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer.API.Controllers;

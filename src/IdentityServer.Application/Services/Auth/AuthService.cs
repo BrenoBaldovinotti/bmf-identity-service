@@ -1,5 +1,6 @@
 ﻿using IdentityServer.Application.DTOs;
-using IdentityServer.Infrastructure.Repositories.User;
+using IdentityServer.Domain.Entities;
+using IdentityServer.Domain.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -8,10 +9,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace IdentityServer.Application.Services.Auth;
+namespace IdentityServer.Application.Services;
 
 public class AuthService(
-    UserManager<Domain.Entities.User> userManager, 
+    UserManager<User> userManager, 
     IUserRepository userRepository, 
     IConfiguration configuration, 
     ILogger<AuthService> logger) : IAuthService
@@ -35,7 +36,7 @@ public class AuthService(
         return GenerateJwtToken(user);
     }
 
-    private string GenerateJwtToken(Domain.Entities.User user)
+    private string GenerateJwtToken(User user)
     {
         if (string.IsNullOrEmpty(_jwtSecretKey) || string.IsNullOrEmpty(_jwtIssuer) || string.IsNullOrEmpty(_jwtAudience))
         {

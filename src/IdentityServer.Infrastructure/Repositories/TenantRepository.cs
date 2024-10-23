@@ -1,19 +1,20 @@
 ﻿using IdentityServer.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using IdentityServer.Domain.Entities;
+using IdentityServer.Domain.Repository;
 
-namespace IdentityServer.Infrastructure.Repositories.Tenant;
+namespace IdentityServer.Infrastructure.Repositories;
 
 public class TenantRepository(IdentityDbContext context) : ITenantRepository
 {
-    public async Task AddTenantAsync(Domain.Entities.Tenant tenant)
+    public async Task AddTenantAsync(Tenant tenant)
     {
         await context.Tenants.AddAsync(tenant);
         await context.SaveChangesAsync();
     }
 
-    public async Task<Domain.Entities.Tenant?> GetByApiKeyHash(string apiKeyHash)
+    public async Task<Tenant?> GetByApiKeyHash(string apiKeyHash)
     {
         return await context.Tenants.FirstOrDefaultAsync(t => t.ApiKeyHash == apiKeyHash);
     }
 }
-    

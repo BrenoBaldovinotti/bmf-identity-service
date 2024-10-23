@@ -1,6 +1,6 @@
 ﻿using IdentityServer.Application.DTOs;
 
-namespace IdentityServer.Application.Services.Tenant;
+namespace IdentityServer.Application.Services;
 
 public interface ITenantService
 {

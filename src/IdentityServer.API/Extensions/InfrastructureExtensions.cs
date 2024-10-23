@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using IdentityServer.Infrastructure.Repositories.User;
 using IdentityServer.Infrastructure.Data;
-using IdentityServer.Infrastructure.Repositories.Tenant;
+using IdentityServer.Infrastructure.Repositories;
+using IdentityServer.Domain.Repository;
 
 namespace IdentityServer.API.Extensions;
 

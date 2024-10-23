@@ -9,12 +9,10 @@ using System.Text;
 using IdentityServer.Application.DTOs;
 using IdentityServer.Application.Validators;
 using IdentityServer.API.Filters;
-using IdentityServer.Application.Services.Auth;
 using IdentityServer.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using IdentityServer.Infrastructure.Data;
-using IdentityServer.Application.Services.User;
-using IdentityServer.Application.Services.Tenant;
+using IdentityServer.Application.Services;
 
 namespace IdentityServer.API.Extensions;
 

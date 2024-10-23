@@ -1,6 +1,6 @@
 ﻿using IdentityServer.Application.DTOs;
 
-namespace IdentityServer.Application.Services.Auth;
+namespace IdentityServer.Application.Services;
 
 public interface IAuthService
 {
