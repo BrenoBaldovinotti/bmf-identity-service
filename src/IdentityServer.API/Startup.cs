@@ -24,7 +24,6 @@ public class Startup(IConfiguration configuration)
 
         services.AddCustomDomainServices();
         services.AddCustomInfrastructure(configuration);
-
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

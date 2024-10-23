@@ -12,7 +12,7 @@ namespace IdentityServer.Application.Services.Auth;
 
 public class AuthService(
     UserManager<Domain.Entities.User> userManager, 
-    UserRepository userRepository, 
+    IUserRepository userRepository, 
     IConfiguration configuration, 
     ILogger<AuthService> logger) : IAuthService
 {

@@ -13,6 +13,8 @@ using IdentityServer.Application.Services.Auth;
 using IdentityServer.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using IdentityServer.Infrastructure.Data;
+using IdentityServer.Application.Services.User;
+using IdentityServer.Application.Services.Tenant;
 
 namespace IdentityServer.API.Extensions;
 
@@ -145,6 +147,8 @@ public static class ServiceExtension
     public static IServiceCollection AddCustomDomainServices(this IServiceCollection services)
     {
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ITenantService, TenantService>();
         return services;
     }
 }

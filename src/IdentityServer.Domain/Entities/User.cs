@@ -4,11 +4,17 @@ namespace IdentityServer.Domain.Entities;
 
 public class User : IdentityUser<Guid>
 {
+    public string PasswordSalt { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public User() : base() { }
 
-    public User(string name, string email, string? phoneNumber) : base(name)
+    public User(
+        string name, 
+        string email, 
+        string password, 
+        string passwordSalt,
+        string? phoneNumber) : base(name)
     {
         NormalizedUserName = name.ToUpper();
         Email = email;
@@ -20,5 +26,7 @@ public class User : IdentityUser<Guid>
         LockoutEnabled = true;
         AccessFailedCount = 0;
         CreatedAt = DateTime.UtcNow;
+        PasswordHash = PasswordHash;
+        PasswordSalt = PasswordSalt;
     }
 }

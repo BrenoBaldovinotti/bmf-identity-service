@@ -1,4 +1,5 @@
 ﻿using IdentityServer.Application.DTOs;
+using IdentityServer.Application.Utils;
 using IdentityServer.Infrastructure.Repositories.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -7,7 +8,7 @@ namespace IdentityServer.Application.Services.User;
 
 public class UserService(
     UserManager<Domain.Entities.User> userManager,
-    UserRepository userRepository,
+    IUserRepository userRepository,
     ILogger<UserService> logger) : IUserService
 {
     public async Task<bool> RegisterAsync(RegisterUserDto registerDto)
@@ -18,7 +19,14 @@ public class UserService(
         if (!await userRepository.IsApplicationKeyValidAsync(registerDto.ApplicationKey)) return false;
 
         // Create User
-        var user = new Domain.Entities.User(registerDto.Username, registerDto.Email, registerDto.PhoneNumber);
+        var (passwordHash, salt) = PasswordHasher.HashPassword(registerDto.Password);
+        var user = new Domain.Entities.User(
+            registerDto.Username, 
+            registerDto.Email, 
+            passwordHash, 
+            salt,
+            registerDto.PhoneNumber
+        );
 
         var result = await userManager.CreateAsync(user, registerDto.Password);
         if (!result.Succeeded)
