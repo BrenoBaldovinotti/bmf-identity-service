@@ -17,7 +17,7 @@ public class UserRepository(IdentityDbContext context) : IUserRepository
         return await context.Tenants.AnyAsync(a => a.ApiKeyHash == applicationKey);
     }
 
-    public async Task AddUserAsync(User user)
+    public async Task AddAsync(User user)
     {
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();

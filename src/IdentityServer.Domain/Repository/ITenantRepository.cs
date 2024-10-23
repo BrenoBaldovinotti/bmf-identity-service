@@ -4,6 +4,6 @@ namespace IdentityServer.Domain.Repository;
 
 public interface ITenantRepository
 {
-    Task AddTenantAsync(Tenant tenant);
+    Task AddAsync(Tenant tenant);
     Task<Tenant?> GetByApiKeyHash(string apiKeyHash);
 }

@@ -7,7 +7,7 @@ namespace IdentityServer.Infrastructure.Repositories;
 
 public class TenantRepository(IdentityDbContext context) : ITenantRepository
 {
-    public async Task AddTenantAsync(Tenant tenant)
+    public async Task AddAsync(Tenant tenant)
     {
         await context.Tenants.AddAsync(tenant);
         await context.SaveChangesAsync();

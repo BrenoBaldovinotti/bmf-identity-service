@@ -19,7 +19,7 @@ public class TenantService(ITenantRepository tenantRepository) : ITenantService
             CreatedAt = DateTime.UtcNow,
         };
 
-        await tenantRepository.AddTenantAsync(tenant);
+        await tenantRepository.AddAsync(tenant);
 
         return true;
     }
