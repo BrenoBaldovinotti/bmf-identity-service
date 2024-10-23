@@ -18,7 +18,7 @@ public class UserService(
 
         if (!await userRepository.IsApplicationKeyValidAsync(registerDto.ApplicationKey)) return false;
 
-        var (passwordHash, salt) = PasswordHasher.HashPassword(registerDto.Password);
+        var (passwordHash, salt) = PasswordHelper.HashPassword(registerDto.Password);
         var user = new User(
             registerDto.Username, 
             registerDto.Email, 

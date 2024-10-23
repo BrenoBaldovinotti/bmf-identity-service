@@ -1,4 +1,5 @@
 ﻿using IdentityServer.Application.DTOs;
+using IdentityServer.Application.Utils;
 using IdentityServer.Domain.Entities;
 using IdentityServer.Domain.Repository;
 using Microsoft.AspNetCore.Identity;
@@ -23,16 +24,27 @@ public class AuthService(
 
     public async Task<string?> LoginAsync(LoginRequestDto loginDto)
     {
-        logger.LogInformation($"User {loginDto.Username} attempting login");
+        logger.LogInformation("User {Username} attempting login", loginDto.Username);
 
         var user = await userRepository.GetByUsernameAsync(loginDto.Username);
-        if (user == null || !await userManager.CheckPasswordAsync(user, loginDto.Password))
+        if (user == null)
         {
-            logger.LogWarning($"Invalid login attempt for user {loginDto.Username}");
+            logger.LogWarning("Login failed: User {Username} not found", loginDto.Username);
             return null;
         }
 
-        logger.LogInformation($"User {loginDto.Username} logged in successfully");
+        if (string.IsNullOrEmpty(user.PasswordHash) ||
+            !PasswordHelper.PasswordsMatch(loginDto.Password, user.PasswordHash, user.PasswordSalt))
+        {
+            logger.LogWarning("Invalid login attempt for user {Username}", loginDto.Username);
+            await userManager.AccessFailedAsync(user);
+            return null;
+        }
+
+        // Reset failed attempts on successful login
+        await userManager.ResetAccessFailedCountAsync(user);
+        logger.LogInformation("User {Username} logged in successfully", loginDto.Username);
+
         return GenerateJwtToken(user);
     }
 

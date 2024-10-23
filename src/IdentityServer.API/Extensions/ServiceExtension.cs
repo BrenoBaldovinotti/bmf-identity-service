@@ -28,9 +28,14 @@ public static class ServiceExtension
 
     public static IServiceCollection AddCustomIdentity(this IServiceCollection services)
     {
-        services.AddIdentity<User, IdentityRole<Guid>>()
-            .AddEntityFrameworkStores<IdentityDbContext>()
-            .AddDefaultTokenProviders();
+        services.AddIdentity<User, IdentityRole<Guid>>(options =>
+        {
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.AllowedForNewUsers = true;
+        })
+        .AddEntityFrameworkStores<IdentityDbContext>()
+        .AddDefaultTokenProviders();
 
         return services;
     }
