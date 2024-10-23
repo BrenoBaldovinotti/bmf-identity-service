@@ -16,7 +16,7 @@ public class IdentityDbContext(DbContextOptions<IdentityDbContext> options) : Id
 
         // Ensure Application Key is unique
         builder.Entity<Tenant>()
-            .HasIndex(t => t.Key)
+            .HasIndex(t => t.ApiKeyHash)
             .IsUnique();
 
         builder.Entity<TenantUser>()

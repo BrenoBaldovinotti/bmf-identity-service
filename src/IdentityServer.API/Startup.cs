@@ -30,6 +30,7 @@ public class Startup(IConfiguration configuration)
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseMiddleware<GlobalExceptionMiddleware>();
+        app.UseMiddleware<ApiKeyMiddleware>();
 
         if (env.IsDevelopment())
         {

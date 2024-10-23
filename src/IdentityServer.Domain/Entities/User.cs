@@ -19,5 +19,6 @@ public class User : IdentityUser<Guid>
         TwoFactorEnabled = false;
         LockoutEnabled = true;
         AccessFailedCount = 0;
+        CreatedAt = DateTime.UtcNow;
     }
 }

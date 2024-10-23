@@ -109,6 +109,7 @@ public static class ServiceExtension
         services.AddFluentValidationAutoValidation();
         services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
         services.AddScoped<IValidator<LoginRequestDto>, LoginRequestDtoValidator>();
+        services.AddScoped<IValidator<CreateTenantDto>, CreateTenantDtoValidator>();
 
         return services;
     }
