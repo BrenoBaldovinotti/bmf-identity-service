@@ -33,6 +33,9 @@ public static class ServiceExtension
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             options.Lockout.MaxFailedAccessAttempts = 5;
             options.Lockout.AllowedForNewUsers = true;
+
+
+            options.User.RequireUniqueEmail = true;
         })
         .AddEntityFrameworkStores<IdentityDbContext>()
         .AddDefaultTokenProviders();
@@ -104,6 +107,33 @@ public static class ServiceExtension
                     Email = "brenobaldovinotti@gmail.com"
                 }
             });
+
+            c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+            {
+                Description = "API Key needed to access the endpoints. Use: X-Api-Key: {apiKey}",
+                Type = SecuritySchemeType.ApiKey,
+                In = ParameterLocation.Header,
+                Name = "X-Api-Key",
+                Scheme = "ApiKeyScheme"
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "ApiKey"
+                        },
+                        Scheme = "ApiKeyScheme",
+                        Name = "X-Api-Key",
+                        In = ParameterLocation.Header
+                    },
+                    new List<string>()
+                }
+            });
         });
 
         return services;
@@ -143,8 +173,8 @@ public static class ServiceExtension
     {
         services.AddControllers(options =>
         {
-            options.Filters.Add<ValidationFilter>();
             options.Filters.Add<TenantResolutionFilter>();
+            options.Filters.Add<ValidationFilter>();
         });
 
         return services;

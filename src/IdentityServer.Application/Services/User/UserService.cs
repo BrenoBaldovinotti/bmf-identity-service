@@ -12,11 +12,9 @@ public class UserService(
     IUserRepository userRepository,
     ILogger<UserService> logger) : IUserService
 {
-    public async Task<bool> RegisterAsync(RegisterUserDto registerDto)
+    public async Task<bool> RegisterAsync(RegisterUserDto registerDto, Tenant tenant)
     {
         logger.LogInformation($"Registering new user: {registerDto.Username}");
-
-        if (!await userRepository.IsApplicationKeyValidAsync(registerDto.ApplicationKey)) return false;
 
         var (passwordHash, salt) = PasswordHelper.HashPassword(registerDto.Password);
         var user = new User(
@@ -36,8 +34,7 @@ public class UserService(
 
         logger.LogInformation($"User {registerDto.Username} registered successfully");
 
-        var application = await userRepository.GetByUsernameAsync(registerDto.Username);
-        await userRepository.AddUserToApplicationAsync(user.Id, application!.Id);
+        await userRepository.AddUserToApplicationAsync(user.Id, tenant.Id);
 
         return true;
     }

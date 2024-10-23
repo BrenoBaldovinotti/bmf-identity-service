@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace IdentityServer.API.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("api/v{version:apiVersion}/[controller]")]
 public abstract class BaseController() : ControllerBase
 {

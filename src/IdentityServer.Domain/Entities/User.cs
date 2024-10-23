@@ -10,13 +10,13 @@ public class User : IdentityUser<Guid>
     public User() : base() { }
 
     public User(
-        string name, 
+        string username,
         string email, 
         string password, 
         string passwordSalt,
-        string? phoneNumber) : base(name)
+        string? phoneNumber) : base(username)
     {
-        NormalizedUserName = name.ToUpper();
+        NormalizedUserName = username;
         Email = email;
         NormalizedEmail = email.ToUpper();
         EmailConfirmed = false;
@@ -26,7 +26,7 @@ public class User : IdentityUser<Guid>
         LockoutEnabled = true;
         AccessFailedCount = 0;
         CreatedAt = DateTime.UtcNow;
-        PasswordHash = PasswordHash;
-        PasswordSalt = PasswordSalt;
+        PasswordHash = password;
+        PasswordSalt = passwordSalt;
     }
 }

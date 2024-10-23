@@ -9,9 +9,9 @@ public class RegisterUserDtoValidator : AbstractValidator<RegisterUserDto>
     {
         RuleFor(x => x.Username)
            .NotEmpty().WithMessage(ValidationMessages.IsRequired<RegisterUserDto>(x => x.Username))
-           .MinimumLength(6).WithMessage(ValidationMessages.MustBeGreaterThan<RegisterUserDto>(x => x.Username, 6))
-           .Matches("^[A-Za-zÀ-ÿ]+(?:\\s[A-Za-zÀ-ÿ]+)*$")
-           .WithMessage("Username can only contain letters and spaces, without special characters.");
+           .MinimumLength(11).WithMessage(ValidationMessages.MustBeGreaterThan<RegisterUserDto>(x => x.Username, 11))
+           .Matches("^[0-9]")
+           .WithMessage("Username can only contain numbers.");
 
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage(ValidationMessages.IsRequired<RegisterUserDto>(x => x.Email))
@@ -25,9 +25,6 @@ public class RegisterUserDtoValidator : AbstractValidator<RegisterUserDto>
             .Matches("[a-z]").WithMessage("Password must contain at least one lowercase letter.")
             .Matches("[0-9]").WithMessage("Password must contain at least one number.")
             .Matches("[^a-zA-Z0-9]").WithMessage("Password must contain at least one special character.");
-
-        RuleFor(x => x.ApplicationKey)
-            .NotEmpty().WithMessage(ValidationMessages.IsRequired<RegisterUserDto>(x => x.ApplicationKey));
 
         RuleFor(x => x.PhoneNumber)
             .Matches("^\\+\\d{10,15}$")
